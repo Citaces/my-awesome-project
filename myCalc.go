@@ -8,7 +8,6 @@ import (
 	"strings"
 )
 
-var result int
 var roman = map[string]int{
 	"C":    100,
 	"XC":   90,
@@ -41,14 +40,12 @@ var convIntToRoman = [14]int{
 	2,
 	1,
 }
-
 var operators = map[string]func(a, b int) int{
 	"+": func(a, b int) int { return a + b },
 	"-": func(a, b int) int { return a - b },
 	"/": func(a, b int) int { return a / b },
 	"*": func(a, b int) int { return a * b },
 }
-
 var data []string
 
 const (
