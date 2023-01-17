@@ -40,25 +40,26 @@ var convIntToRoman = [14]int{
 	2,
 	1,
 }
-var operators = map[string]func(a, b int) int{
-	"+": func(a, b int) int { return a + b },
-	"-": func(a, b int) int { return a - b },
-	"/": func(a, b int) int { return a / b },
-	"*": func(a, b int) int { return a * b },
+var a, b *int
+var operators = map[string]func() int{
+	"+": func() int { return *a + *b },
+	"-": func() int { return *a - *b },
+	"/": func() int { return *a / *b },
+	"*": func() int { return *a * *b },
 }
 var data []string
 
 const (
-	errLow = "Вывод ошибки, так как строка " +
+	LOW = "Вывод ошибки, так как строка " +
 		"не является математической операцией."
-	errHigh = "Вывод ошибки, так как формат математической операции " +
+	HIGH = "Вывод ошибки, так как формат математической операции " +
 		"не удовлетворяет заданию — два операнда и один оператор (+, -, /, *)."
-	errDifSys = "Вывод ошибки, так как используются " +
+	SCALE = "Вывод ошибки, так как используются " +
 		"одновременно разные системы счисления."
-	errDif = "Вывод ошибки, так как в римской системе " +
+	DIV = "Вывод ошибки, так как в римской системе " +
 		"нет отрицательных чисел."
-	errZero     = "Вывод ошибки, так как в римской системе нет числа 0."
-	errOneToTen = "Калькулятор умеет работать только с арабскими целыми " +
+	ZERO  = "Вывод ошибки, так как в римской системе нет числа 0."
+	RANGE = "Калькулятор умеет работать только с арабскими целыми " +
 		"числами или римскими цифрами от 1 до 10 включительно"
 )
 
@@ -78,9 +79,9 @@ func base(s string) {
 	}
 	switch {
 	case len(operator) > 1:
-		panic(errHigh)
+		panic(HIGH)
 	case len(operator) < 1:
-		panic(errLow)
+		panic(LOW)
 	}
 	for _, elem := range data {
 		num, err := strconv.Atoi(elem)
@@ -94,36 +95,37 @@ func base(s string) {
 
 	switch stringsFound {
 	case 1:
-		panic(errDifSys)
+		panic(SCALE)
 	case 0:
 		errCheck := numbers[0] > 0 && numbers[0] < 11 &&
 			numbers[1] > 0 && numbers[1] < 11
 		if val, ok := operators[operator]; ok && errCheck == true {
-			fmt.Println(val(numbers[0], numbers[1]))
+			a, b = &numbers[0], &numbers[1]
+			fmt.Println(val())
 		} else {
-			panic(errOneToTen)
+			panic(RANGE)
 		}
 	case 2:
 		for _, elem := range romans {
 			if val, ok := roman[elem]; ok && val > 0 && val < 11 {
 				romansToInt = append(romansToInt, val)
 			} else {
-				panic(errOneToTen)
+				panic(RANGE)
 			}
 		}
 		if val, ok := operators[operator]; ok {
-			romanResult := val(romansToInt[0], romansToInt[1])
-			intToRoman(romanResult)
+			a, b = &romansToInt[0], &romansToInt[1]
+			intToRoman(val())
 		}
 	}
 }
 func intToRoman(romanResult int) {
-	romanNum := ""
+	var romanNum string
 	if romanResult == 0 {
-		panic(errZero)
+		panic(ZERO)
 	}
 	if romanResult < 0 {
-		panic(errDif)
+		panic(DIV)
 	}
 	for romanResult > 0 {
 		for _, elem := range convIntToRoman {
