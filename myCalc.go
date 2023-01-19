@@ -123,8 +123,7 @@ func intToRoman(romanResult int) {
 	var romanNum string
 	if romanResult == 0 {
 		panic(ZERO)
-	}
-	if romanResult < 0 {
+	} else if romanResult < 0 {
 		panic(DIV)
 	}
 	for romanResult > 0 {
