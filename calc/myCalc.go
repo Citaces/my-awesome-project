@@ -1,4 +1,4 @@
-package main
+package calc
 
 import (
 	"bufio"
@@ -140,7 +140,8 @@ func intToRoman(romanResult int) {
 	}
 	fmt.Println(romanNum)
 }
-func main() {
+func Start() {
+	fmt.Println("Welcome to kata-calculator")
 	reader := bufio.NewReader(os.Stdin)
 	for {
 		console, _ := reader.ReadString('\n')
